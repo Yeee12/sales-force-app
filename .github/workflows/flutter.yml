@@ -23,7 +23,7 @@ jobs:
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'
+          channel: 'stable'
           cache: true
 
       - name: Disable Flutter analytics
