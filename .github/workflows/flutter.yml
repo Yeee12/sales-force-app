@@ -20,6 +20,9 @@ jobs:
           flutter-version: 'stable'
           cache: true
 
+      - name: Check Flutter version
+        run: flutter --version
+
       - name: Install dependencies
         run: flutter pub get
 
