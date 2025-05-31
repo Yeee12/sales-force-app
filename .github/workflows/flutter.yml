@@ -13,8 +13,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -25,7 +23,7 @@ jobs:
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.1'
+          flutter-version: '3.27.2'
           channel: 'stable'
           cache: true
 
@@ -40,14 +38,6 @@ jobs:
 
       - name: Format code
         run: dart format .
-
-      - name: Commit formatting changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git diff --staged --quiet || git commit -m "Auto-format code [skip ci]"
-          git push || true
 
       - name: Analyze project source
         run: flutter analyze
