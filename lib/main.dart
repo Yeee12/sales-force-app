@@ -9,10 +9,16 @@ import 'core/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
+  try {
+    await dotenv.load(fileName: ".env");
+    print('Env loaded successfully');
+  } catch (e) {
+    print('Error loading .env file: $e');
+  }
   await ServiceLocator.init();
   runApp(MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   @override

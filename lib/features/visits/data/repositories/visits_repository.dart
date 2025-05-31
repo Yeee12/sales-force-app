@@ -13,14 +13,19 @@ class VisitsRepository implements IVisitsRepository {
   Get.find<ConnectivityService>();
 
   Future<List<Visit>> getVisits() async {
+    print('Checking internet: ${_connectivityService.isConnected}');
+
     if (_connectivityService.isConnected) {
       try {
-        try {
-          await syncLocalVisits();
-        } catch (syncError) {}
+        print('Syncing local visits...');
+        await syncLocalVisits();
 
         final apiVisits = await _apiService.getVisits();
+        print('API returned: ${apiVisits.length}');
+
         final localVisits = await _databaseService.getLocalVisits();
+        print('Local visits: ${localVisits.length}');
+
         final allVisits = <Visit>[];
         allVisits.addAll(apiVisits);
 
@@ -31,14 +36,18 @@ class VisitsRepository implements IVisitsRepository {
           }
         }
 
+        print('Total combined visits: ${allVisits.length}');
         return allVisits;
       } catch (e) {
+        print('Error occurred: $e');
         return await _databaseService.getLocalVisits();
       }
     } else {
+      print('Offline, returning local visits only');
       return await _databaseService.getLocalVisits();
     }
   }
+
 
   Future<Visit> createVisit(Visit visit) async {
     if (_connectivityService.isConnected) {
@@ -71,14 +80,14 @@ class VisitsRepository implements IVisitsRepository {
 
   Future<void> syncLocalVisits() async {
     if (!_connectivityService.isConnected) {
-      return; // No internet connection, skip sync
+      return;
     }
 
     final unsyncedVisits = await _databaseService.getUnsyncedVisits();
+    print('Found ${unsyncedVisits.length} unsynced visits');
 
     for (final visit in unsyncedVisits) {
       try {
-        // Prepare a copy of the visit with isLocal=false to send to API
         final visitForApi = Visit(
           customerId: visit.customerId,
           visitDate: visit.visitDate,
@@ -90,25 +99,24 @@ class VisitsRepository implements IVisitsRepository {
           isLocal: false,
         );
 
-        // Send the local visit data to the API to create remotely
         final syncedVisit = await _apiService.createVisit(visitForApi);
 
-        // If the API returns a new ID different from the local ID,
-        // update the local database record with the new remote ID
         if (syncedVisit.id != null && visit.id != syncedVisit.id) {
           await _databaseService.updateVisitId(visit.id!, syncedVisit.id!);
         }
 
-        // Mark this visit as synced locally (e.g., isLocal = false)
         if (visit.id != null) {
           await _databaseService.markVisitAsSynced(visit.id!);
         }
-      } catch (e) {
-        // If syncing this visit fails, ignore and continue with others
-        continue;
+
+        print('Visit synced successfully: ${visit.id}');
+      } catch (e, stackTrace) {
+        print('Error syncing visit: $e');
+        print('Stack trace: $stackTrace');
       }
     }
   }
+
 
 
   Future<List<Customer>> getCustomers() async {

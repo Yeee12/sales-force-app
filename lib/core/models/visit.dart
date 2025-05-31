@@ -81,7 +81,7 @@ class Visit {
       if (createdAt != null) json['created_at'] = createdAt!.toIso8601String();
 
       return json;
-    } catch (e, stackTrace) {
+    } catch (e) {
       rethrow;
     }
   }

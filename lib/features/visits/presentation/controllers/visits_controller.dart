@@ -10,7 +10,7 @@ class VisitsController extends GetxController {
   final VisitsRepository _repository;
 
   VisitsController({VisitsRepository? repository})
-    : _repository = repository ?? Get.find<VisitsRepository>();
+      : _repository = repository ?? Get.find<VisitsRepository>();
 
   final RxList<Visit> _visits = <Visit>[].obs;
   final RxList<Visit> _filteredVisits = <Visit>[].obs;
@@ -49,7 +49,7 @@ class VisitsController extends GetxController {
 
     debounce(
       _searchQuery,
-      (_) => _filterVisits(),
+          (_) => _filterVisits(),
       time: const Duration(milliseconds: 300),
     );
     ever(_statusFilter, (_) => _filterVisits());
@@ -131,7 +131,7 @@ class VisitsController extends GetxController {
       _isLoading.value = true;
 
       final selectedCustomer = _customers.firstWhereOrNull(
-        (customer) => customer.id == selectedCustomerId.value,
+            (customer) => customer.id == selectedCustomerId.value,
       );
 
       if (selectedCustomer == null) {
@@ -204,7 +204,7 @@ class VisitsController extends GetxController {
       filtered =
           filtered.where((visit) {
             final customer = _customers.firstWhereOrNull(
-              (c) => c.id == visit.customerId,
+                  (c) => c.id == visit.customerId,
             );
             final customerName = customer?.name.toLowerCase() ?? '';
             final location = visit.location.toLowerCase();
@@ -245,7 +245,7 @@ class VisitsController extends GetxController {
   List<String> getActivityDescriptions(List<String> activityIds) {
     return activityIds.map((id) {
       final activity = _activities.firstWhereOrNull(
-        (a) => a.id.toString() == id,
+            (a) => a.id.toString() == id,
       );
       return activity?.description ?? 'Unknown Activity';
     }).toList();
