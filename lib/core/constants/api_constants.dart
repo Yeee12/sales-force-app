@@ -1,12 +1,13 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 class ApiConstants {
-  static const String baseUrl = 'https://kqgbftwsodpttpqgqnbh.supabase.co/rest/v1';
-  static const String apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtxZ2JmdHdzb2RwdHRwcWdxbmJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU5ODk5OTksImV4cCI6MjA2MTU2NTk5OX0.rwJSY4bJaNdB8jDn3YJJu_gKtznzm-dUKQb4OvRtP6c';
+  static final String baseUrl = dotenv.env['SUPABASE_BASE_URL'] ?? '';
+  static final String apiKey = dotenv.env['SUPABASE_API_KEY'] ?? '';
   static const String customers = '/customers';
   static const String activities = '/activities';
   static const String visits = '/visits';
   static Map<String, String> get headers => {
-  'Content-Type': 'application/json',
-  'apikey': apiKey,
-  'Authorization': 'Bearer $apiKey',
+    'Content-Type': 'application/json',
+    'apikey': apiKey,
+    'Authorization': 'Bearer $apiKey',
   };
 }

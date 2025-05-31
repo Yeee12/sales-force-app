@@ -23,15 +23,16 @@ class Visit {
 
   factory Visit.fromJson(Map<String, dynamic> json) {
     List<String> parseActivities(dynamic activities) {
-      if (activities == null) return [];
+      if (activities == null) return <String>[];
       if (activities is String) {
         String cleaned = activities.toString().replaceAll(RegExp(r'[{}]'), '');
-        return cleaned.isEmpty ? [] : cleaned.split(',').map((e) => e.trim()).toList();
+        return cleaned.isEmpty ? <String>[] : cleaned.split(',').map((e) => e.trim()).toList();
       }
       if (activities is List) {
+        // Ensure we create a mutable list
         return List<String>.from(activities);
       }
-      return [];
+      return <String>[];
     }
 
     return Visit(
@@ -50,32 +51,50 @@ class Visit {
   }
 
   Map<String, dynamic> toApiJson() {
-    String activitiesFormatted;
-    if (activitiesDone.isEmpty) {
-      activitiesFormatted = '{}';
-    } else {
-      List<String> activities;
-      if (activitiesDone is List<String>) {
-        activities = activitiesDone;
-      } else {
-        activities = activitiesDone.map((e) => e.toString()).toList();
-      }
-      activitiesFormatted = '{${activities.join(',')}}';
-    }
+    try {
+      print('Converting to API JSON...');
+      print('Activities list: ${activitiesDone}');
+      print('Activities type: ${activitiesDone.runtimeType}');
 
-    return {
-      if (id != null) 'id': id,
-      'customer_id': customerId,
-      'visit_date': visitDate.toIso8601String(),
-      'status': status,
-      'location': location,
-      'notes': notes,
-      'activities_done': activitiesFormatted,
-      if (createdAt != null) 'created_at': createdAt!.toIso8601String(),
-    };
+      // Create a completely new list to avoid any read-only issues
+      List<String> safeActivities = <String>[];
+      for (var activity in activitiesDone) {
+        safeActivities.add(activity.toString());
+      }
+
+      String activitiesFormatted;
+      if (safeActivities.isEmpty) {
+        activitiesFormatted = '{}';
+      } else {
+        activitiesFormatted = '{${safeActivities.join(',')}}';
+      }
+      print('Formatted activities: $activitiesFormatted');
+
+      final json = <String, dynamic>{
+        'customer_id': customerId,
+        'visit_date': visitDate.toIso8601String(),
+        'status': status,
+        'location': location,
+        'notes': notes,
+        'activities_done': activitiesFormatted,
+      };
+
+      if (id != null) json['id'] = id;
+      if (createdAt != null) json['created_at'] = createdAt!.toIso8601String();
+
+      print('Final JSON: $json');
+      return json;
+    } catch (e, stackTrace) {
+      print('Error in toApiJson: $e');
+      print('Stack trace: $stackTrace');
+      rethrow;
+    }
   }
 
   Map<String, dynamic> toLocalJson() {
+    // Create a mutable copy of the activities list
+    final List<String> activitiesCopy = List<String>.from(activitiesDone);
+
     return {
       if (id != null) 'id': id,
       'customer_id': customerId,
@@ -83,7 +102,7 @@ class Visit {
       'status': status,
       'location': location,
       'notes': notes,
-      'activities_done': activitiesDone.join(','),
+      'activities_done': activitiesCopy.join(','),
       if (createdAt != null) 'created_at': createdAt!.toIso8601String(),
       'is_local': isLocal ? 1 : 0,
     };
@@ -107,7 +126,7 @@ class Visit {
       status: status ?? this.status,
       location: location ?? this.location,
       notes: notes ?? this.notes,
-      activitiesDone: activitiesDone ?? this.activitiesDone,
+      activitiesDone: activitiesDone ?? List<String>.from(this.activitiesDone),
       createdAt: createdAt ?? this.createdAt,
       isLocal: isLocal ?? this.isLocal,
     );

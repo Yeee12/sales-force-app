@@ -1,3 +1,4 @@
+//database
 import 'package:sales_force_automation/core/models/customer_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -59,11 +60,9 @@ class DatabaseService {
     ''');
   }
 
-  // Visit operations
   Future<int> insertVisit(Visit visit) async {
     final db = await database;
     final visitData = visit.toLocalJson();
-    visitData['activities_done'] = visitData['activities_done'].join(',');
     visitData['is_local'] = visit.isLocal ? 1 : 0;
     visitData['synced'] = 0;
     return await db.insert('visits', visitData);
@@ -73,7 +72,10 @@ class DatabaseService {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('visits');
     return List<Visit>.from(maps.map((map) {
-      map['activities_done'] = map['activities_done'].toString().split(',');
+      if (map['activities_done'] is String) {
+        String activitiesStr = map['activities_done'].toString();
+        map['activities_done'] = activitiesStr.isEmpty ? [] : activitiesStr.split(',');
+      }
       map['is_local'] = map['is_local'] == 1;
       return Visit.fromJson(map);
     }));
@@ -83,13 +85,25 @@ class DatabaseService {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       'visits',
-      where: 'synced = ?',
-      whereArgs: [0],
+      where: 'synced = ? AND is_local = ?',
+      whereArgs: [0, 1],
     );
+
     return List<Visit>.from(maps.map((map) {
-      map['activities_done'] = map['activities_done'].toString().split(',');
+
+      if (map['activities_done'] is String) {
+        String activitiesStr = map['activities_done'].toString();
+        List<String> activitiesList = <String>[];
+        if (activitiesStr.isNotEmpty) {
+          activitiesList.addAll(activitiesStr.split(',').map((e) => e.trim()));
+        }
+        map['activities_done'] = activitiesList;
+      }
+
       map['is_local'] = map['is_local'] == 1;
-      return Visit.fromJson(map);
+
+      final visit = Visit.fromJson(map);
+      return visit;
     }));
   }
 
@@ -103,7 +117,6 @@ class DatabaseService {
     );
   }
 
-  // Customer operations
   Future<void> insertCustomers(List<Customer> customers) async {
     final db = await database;
     final batch = db.batch();
