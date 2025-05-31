@@ -1,0 +1,40 @@
+name: Flutter CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Run Flutter analyze (static analysis)
+        run: flutter analyze
+
+      - name: Run Flutter tests
+        run: flutter test --coverage
+
+      - name: Build APK (release)
+        if: success()
+        run: flutter build apk --release
+
+      - name: Upload APK artifact
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
