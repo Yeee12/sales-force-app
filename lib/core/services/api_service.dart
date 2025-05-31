@@ -13,7 +13,10 @@ class ApiService {
   Future<List<Customer>> getCustomers() async {
     final url = '${ApiConstants.baseUrl}${ApiConstants.customers}';
     try {
-      final response = await http.get(Uri.parse(url), headers: ApiConstants.headers);
+      final response = await http.get(
+        Uri.parse(url),
+        headers: ApiConstants.headers,
+      );
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         return data.map((json) => Customer.fromJson(json)).toList();
@@ -28,7 +31,10 @@ class ApiService {
   Future<List<Activity>> getActivities() async {
     final url = '${ApiConstants.baseUrl}${ApiConstants.activities}';
     try {
-      final response = await http.get(Uri.parse(url), headers: ApiConstants.headers);
+      final response = await http.get(
+        Uri.parse(url),
+        headers: ApiConstants.headers,
+      );
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         return data.map((json) => Activity.fromJson(json)).toList();
@@ -43,7 +49,10 @@ class ApiService {
   Future<List<Visit>> getVisits() async {
     final url = '${ApiConstants.baseUrl}${ApiConstants.visits}';
     try {
-      final response = await http.get(Uri.parse(url), headers: ApiConstants.headers);
+      final response = await http.get(
+        Uri.parse(url),
+        headers: ApiConstants.headers,
+      );
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         return data.map((json) => Visit.fromJson(json)).toList();
@@ -88,7 +97,8 @@ class ApiService {
         if (response.body.isNotEmpty) {
           try {
             final errorData = json.decode(response.body);
-            errorMessage = errorData['message'] ?? errorData['error'] ?? errorMessage;
+            errorMessage =
+                errorData['message'] ?? errorData['error'] ?? errorMessage;
           } catch (e) {
             errorMessage = response.body;
           }
@@ -96,19 +106,24 @@ class ApiService {
         throw Exception('Failed to create visit: $errorMessage');
       }
     } catch (e) {
-      if (e is FormatException && e.toString().contains('Unexpected end of input')) {
+      if (e is FormatException &&
+          e.toString().contains('Unexpected end of input')) {
         return visit;
       }
       throw Exception('Network error: $e');
     }
   }
 
-
   Future<Visit> updateVisit(Visit visit) async {
-    final url = '${ApiConstants.baseUrl}${ApiConstants.visits}?id=eq.${visit.id}';
+    final url =
+        '${ApiConstants.baseUrl}${ApiConstants.visits}?id=eq.${visit.id}';
     final body = json.encode(visit.toApiJson());
     try {
-      final response = await http.patch(Uri.parse(url), headers: ApiConstants.headers, body: body);
+      final response = await http.patch(
+        Uri.parse(url),
+        headers: ApiConstants.headers,
+        body: body,
+      );
       if (response.statusCode == 200) {
         return visit;
       } else {

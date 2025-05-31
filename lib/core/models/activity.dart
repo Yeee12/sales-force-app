@@ -19,9 +19,9 @@ class Activity {
 
   Map<String, dynamic> toJson() {
     return {
-    'id': id,
-    'description': description,
-    'created_at': createdAt.toIso8601String(),
- };
- }
+      'id': id,
+      'description': description,
+      'created_at': createdAt.toIso8601String(),
+    };
+  }
 }

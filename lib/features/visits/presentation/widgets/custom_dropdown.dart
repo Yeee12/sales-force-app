@@ -21,17 +21,19 @@ class CustomerDropdown extends GetView<VisitsController> {
         ),
         value: controller.selectedCustomerId.value,
         isExpanded: true,
-        items: controller.customers.map((customer) {
-          return DropdownMenuItem<int>(
-            value: customer.id,
-            child: Text(customer.name,
-            overflow: TextOverflow.ellipsis,),
-          );
-        }).toList(),
+        items:
+            controller.customers.map((customer) {
+              return DropdownMenuItem<int>(
+                value: customer.id,
+                child: Text(customer.name, overflow: TextOverflow.ellipsis),
+              );
+            }).toList(),
         onChanged: (int? value) {
           controller.selectedCustomerId.value = value;
           if (value != null) {
-            final selectedCustomer = controller.customers.firstWhereOrNull((c) => c.id == value);
+            final selectedCustomer = controller.customers.firstWhereOrNull(
+              (c) => c.id == value,
+            );
             if (selectedCustomer != null) {
               controller.customerController.text = selectedCustomer.name;
             }

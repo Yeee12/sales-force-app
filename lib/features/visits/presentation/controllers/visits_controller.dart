@@ -6,12 +6,11 @@ import 'package:sales_force_automation/core/models/customer_model.dart';
 import 'package:sales_force_automation/core/models/visit.dart';
 import 'package:sales_force_automation/features/visits/data/repositories/visits_repository.dart';
 
-
 class VisitsController extends GetxController {
   final VisitsRepository _repository;
 
   VisitsController({VisitsRepository? repository})
-      : _repository = repository ?? Get.find<VisitsRepository>();
+    : _repository = repository ?? Get.find<VisitsRepository>();
 
   final RxList<Visit> _visits = <Visit>[].obs;
   final RxList<Visit> _filteredVisits = <Visit>[].obs;
@@ -48,7 +47,11 @@ class VisitsController extends GetxController {
     super.onInit();
     loadData();
 
-    debounce(_searchQuery, (_) => _filterVisits(), time: const Duration(milliseconds: 300));
+    debounce(
+      _searchQuery,
+      (_) => _filterVisits(),
+      time: const Duration(milliseconds: 300),
+    );
     ever(_statusFilter, (_) => _filterVisits());
   }
 
@@ -74,7 +77,6 @@ class VisitsController extends GetxController {
       final customers = results[1] as List<Customer>;
       final activities = results[2] as List<Activity>;
 
-
       _visits.assignAll(visits);
       _customers.assignAll(customers);
       _activities.assignAll(activities);
@@ -94,7 +96,6 @@ class VisitsController extends GetxController {
       _isLoading.value = false;
     }
   }
-
 
   Future<void> refreshData() async {
     try {
@@ -131,7 +132,7 @@ class VisitsController extends GetxController {
       _isLoading.value = true;
 
       final selectedCustomer = _customers.firstWhereOrNull(
-            (customer) => customer.id == selectedCustomerId.value,
+        (customer) => customer.id == selectedCustomerId.value,
       );
 
       if (selectedCustomer == null) {
@@ -155,8 +156,6 @@ class VisitsController extends GetxController {
         notes: notesController.text.trim(),
         activitiesDone: activitiesList,
       );
-
-
 
       final createdVisit = await _repository.createVisit(visit);
       _visits.add(createdVisit);
@@ -203,21 +202,25 @@ class VisitsController extends GetxController {
 
     if (_searchQuery.value.isNotEmpty) {
       final query = _searchQuery.value.toLowerCase();
-      filtered = filtered.where((visit) {
-        final customer = _customers.firstWhereOrNull((c) => c.id == visit.customerId);
-        final customerName = customer?.name.toLowerCase() ?? '';
-        final location = visit.location.toLowerCase();
-        final notes = visit.notes.toLowerCase();
-        return customerName.contains(query) ||
-            location.contains(query) ||
-            notes.contains(query);
-      }).toList();
+      filtered =
+          filtered.where((visit) {
+            final customer = _customers.firstWhereOrNull(
+              (c) => c.id == visit.customerId,
+            );
+            final customerName = customer?.name.toLowerCase() ?? '';
+            final location = visit.location.toLowerCase();
+            final notes = visit.notes.toLowerCase();
+            return customerName.contains(query) ||
+                location.contains(query) ||
+                notes.contains(query);
+          }).toList();
     }
 
     if (_statusFilter.value != null) {
-      filtered = filtered.where((visit) {
-        return visit.status == _statusFilter.value!.value;
-      }).toList();
+      filtered =
+          filtered.where((visit) {
+            return visit.status == _statusFilter.value!.value;
+          }).toList();
     }
 
     filtered.sort((a, b) => b.visitDate.compareTo(a.visitDate));
@@ -243,17 +246,19 @@ class VisitsController extends GetxController {
   List<String> getActivityDescriptions(List<String> activityIds) {
     return activityIds.map((id) {
       final activity = _activities.firstWhereOrNull(
-            (a) => a.id.toString() == id,
+        (a) => a.id.toString() == id,
       );
       return activity?.description ?? 'Unknown Activity';
     }).toList();
   }
 
-
   int get totalVisits => _visits.length;
-  int get completedVisits => _visits.where((v) => v.status == 'Completed').length;
+  int get completedVisits =>
+      _visits.where((v) => v.status == 'Completed').length;
   int get pendingVisits => _visits.where((v) => v.status == 'Pending').length;
-  int get cancelledVisits => _visits.where((v) => v.status == 'Cancelled').length;
+  int get cancelledVisits =>
+      _visits.where((v) => v.status == 'Cancelled').length;
 
-  double get completionRate => totalVisits > 0 ? (completedVisits / totalVisits) * 100 : 0;
+  double get completionRate =>
+      totalVisits > 0 ? (completedVisits / totalVisits) * 100 : 0;
 }

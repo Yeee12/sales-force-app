@@ -8,25 +8,25 @@ import 'app_routes.dart';
 
 class AppPages {
   static final routes = [
-  GetPage(
-  name: AppRoutes.VISITS,
-  page: () => VisitsPage(),
-  binding: VisitsBinding(),
-  ),
-  GetPage(
-  name: AppRoutes.ADD_VISIT,
-  page: () => AddVisitPage(),
-  binding: VisitsBinding(),
-  ),
-  GetPage(
-  name: AppRoutes.VISIT_DETAILS,
-  page: () => VisitDetailsPage(),
-  binding: VisitsBinding(),
-  ),
-  GetPage(
-  name: AppRoutes.VISIT_STATISTICS,
-  page: () => VisitStatisticsPage(),
-  binding: VisitsBinding(),
-),
-];
+    GetPage(
+      name: AppRoutes.VISITS,
+      page: () => VisitsPage(),
+      binding: VisitsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.ADD_VISIT,
+      page: () => AddVisitPage(),
+      binding: VisitsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.VISIT_DETAILS,
+      page: () => VisitDetailsPage(),
+      binding: VisitsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.VISIT_STATISTICS,
+      page: () => VisitStatisticsPage(),
+      binding: VisitsBinding(),
+    ),
+  ];
 }

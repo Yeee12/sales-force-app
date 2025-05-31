@@ -6,7 +6,6 @@ import 'package:sales_force_automation/features/visits/presentation/controllers/
 import 'package:sales_force_automation/features/visits/presentation/widgets/activities_selector.dart';
 import 'package:sales_force_automation/features/visits/presentation/widgets/custom_dropdown.dart';
 
-
 class AddVisitPage extends GetView<VisitsController> {
   @override
   Widget build(BuildContext context) {
@@ -14,25 +13,29 @@ class AddVisitPage extends GetView<VisitsController> {
       appBar: AppBar(
         title: const Text('Add Visit'),
         actions: [
-          Obx(() => controller.isLoading
-              ? const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-            ),
-          )
-              : TextButton(
-            onPressed: controller.createVisit,
-            child: const Text(
-              'Save',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          ),
+          Obx(
+            () =>
+                controller.isLoading
+                    ? const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
+                        ),
+                      ),
+                    )
+                    : TextButton(
+                      onPressed: controller.createVisit,
+                      child: const Text(
+                        'Save',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
           ),
         ],
       ),
@@ -71,38 +74,43 @@ class AddVisitPage extends GetView<VisitsController> {
                     ),
                     const SizedBox(height: 16),
 
-                    Obx(() => InkWell(
-                      onTap: () => _selectDate(context),
-                      child: InputDecorator(
-                        decoration: const InputDecoration(
-                          labelText: 'Visit Date',
-                          suffixIcon: Icon(Icons.calendar_today),
-                        ),
-                        child: Text(
-                          DateFormat('MMM dd, yyyy').format(controller.selectedDate.value),
+                    Obx(
+                      () => InkWell(
+                        onTap: () => _selectDate(context),
+                        child: InputDecorator(
+                          decoration: const InputDecoration(
+                            labelText: 'Visit Date',
+                            suffixIcon: Icon(Icons.calendar_today),
+                          ),
+                          child: Text(
+                            DateFormat(
+                              'MMM dd, yyyy',
+                            ).format(controller.selectedDate.value),
+                          ),
                         ),
                       ),
-                    )),
+                    ),
 
                     const SizedBox(height: 16),
 
-                    Obx(() => DropdownButtonFormField<VisitStatus>(
-                      value: controller.selectedStatus.value,
-                      decoration: const InputDecoration(
-                        labelText: 'Status',
+                    Obx(
+                      () => DropdownButtonFormField<VisitStatus>(
+                        value: controller.selectedStatus.value,
+                        decoration: const InputDecoration(labelText: 'Status'),
+                        items:
+                            VisitStatus.values.map((status) {
+                              return DropdownMenuItem(
+                                value: status,
+                                child: Text(status.value),
+                              );
+                            }).toList(),
+                        onChanged: (status) {
+                          if (status != null) {
+                            controller.selectedStatus.value = status;
+                          }
+                        },
                       ),
-                      items: VisitStatus.values.map((status) {
-                        return DropdownMenuItem(
-                          value: status,
-                          child: Text(status.value),
-                        );
-                      }).toList(),
-                      onChanged: (status) {
-                        if (status != null) {
-                          controller.selectedStatus.value = status;
-                        }
-                      },
-                    )),
+                    ),
 
                     const SizedBox(height: 16),
 
@@ -176,5 +184,5 @@ class AddVisitPage extends GetView<VisitsController> {
     if (picked != null) {
       controller.selectedDate.value = picked;
     }
-    }
+  }
 }

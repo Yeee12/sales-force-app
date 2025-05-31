@@ -33,7 +33,6 @@ void main() {
     controller = Get.find<VisitsController>();
   });
 
-
   test('loadData loads visits, customers, activities', () async {
     final visits = [
       Visit(
@@ -43,15 +42,11 @@ void main() {
         visitDate: DateTime(2024, 1, 1),
         status: 'Pending',
         activitiesDone: [],
-      )
+      ),
     ];
 
     final customers = [
-      Customer(
-        id: 1,
-        name: 'Test Customer',
-        createdAt: DateTime(2024, 1, 1),
-      )
+      Customer(id: 1, name: 'Test Customer', createdAt: DateTime(2024, 1, 1)),
     ];
 
     final activities = [
@@ -59,7 +54,7 @@ void main() {
         id: 1,
         description: 'Demo Activity',
         createdAt: DateTime(2024, 1, 1),
-      )
+      ),
     ];
 
     when(mockRepo.getVisits()).thenAnswer((_) async => visits);
@@ -69,7 +64,6 @@ void main() {
 
     await controller.loadData();
 
-
     expect(controller.visits.length, 1);
     expect(controller.visits.first.location, 'A');
 
@@ -78,5 +72,5 @@ void main() {
 
     expect(controller.activities.length, 1);
     expect(controller.activities.first.description, 'Demo Activity');
-    });
+  });
 }

@@ -26,7 +26,9 @@ class Visit {
       if (activities == null) return <String>[];
       if (activities is String) {
         String cleaned = activities.toString().replaceAll(RegExp(r'[{}]'), '');
-        return cleaned.isEmpty ? <String>[] : cleaned.split(',').map((e) => e.trim()).toList();
+        return cleaned.isEmpty
+            ? <String>[]
+            : cleaned.split(',').map((e) => e.trim()).toList();
       }
       if (activities is List) {
         // Ensure we create a mutable list
@@ -43,9 +45,10 @@ class Visit {
       location: json['location'],
       notes: json['notes'],
       activitiesDone: parseActivities(json['activities_done']),
-      createdAt: json['created_at'] != null
-          ? DateTime.tryParse(json['created_at'].toString())
-          : null,
+      createdAt:
+          json['created_at'] != null
+              ? DateTime.tryParse(json['created_at'].toString())
+              : null,
       isLocal: json['is_local'] == 1 || json['is_local'] == true,
     );
   }

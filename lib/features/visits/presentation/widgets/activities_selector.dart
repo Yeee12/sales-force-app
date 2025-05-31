@@ -20,7 +20,9 @@ class ActivitiesSelector extends GetView<VisitsController> {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           ...controller.activities.map((activity) {
-            final isSelected = controller.selectedActivities.contains(activity.id.toString());
+            final isSelected = controller.selectedActivities.contains(
+              activity.id.toString(),
+            );
             return CheckboxListTile(
               title: Text(activity.description),
               value: isSelected,
@@ -38,7 +40,6 @@ class ActivitiesSelector extends GetView<VisitsController> {
     });
   }
 }
-
 
 class VisitCard extends StatelessWidget {
   final Visit visit;
@@ -76,8 +77,10 @@ class VisitCard extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: _getStatusColor(visit.status).withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -100,14 +103,13 @@ class VisitCard extends StatelessWidget {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Icon(Icons.calendar_today,
-                      size: 16, color: Colors.grey[600]),
+                  Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 4),
                   Text(
                     DateFormat('MMM dd, yyyy').format(visit.visitDate),
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -119,10 +121,9 @@ class VisitCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       visit.location,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: Colors.grey[600]),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                     ),
                   ),
                 ],
@@ -141,31 +142,33 @@ class VisitCard extends StatelessWidget {
                 Wrap(
                   spacing: 4,
                   runSpacing: 4,
-                  children: activities.take(3).map((activity) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        activity,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    );
-                  }).toList(),
+                  children:
+                      activities.take(3).map((activity) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            activity,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        );
+                      }).toList(),
                 ),
                 if (activities.length > 3)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
                       '+${activities.length - 3} more',
-                      style:
-                      TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                   ),
               ],
@@ -173,8 +176,7 @@ class VisitCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(Icons.sync_problem,
-                        size: 16, color: Colors.orange),
+                    Icon(Icons.sync_problem, size: 16, color: Colors.orange),
                     const SizedBox(width: 4),
                     Text(
                       'Stored locally',

@@ -20,11 +20,7 @@ class DatabaseService {
 
   Future<Database> _initDB() async {
     String path = join(await getDatabasesPath(), 'visits_tracker.db');
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createDB,
-    );
+    return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
   Future<void> _createDB(Database db, int version) async {
@@ -71,14 +67,17 @@ class DatabaseService {
   Future<List<Visit>> getLocalVisits() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('visits');
-    return List<Visit>.from(maps.map((map) {
-      if (map['activities_done'] is String) {
-        String activitiesStr = map['activities_done'].toString();
-        map['activities_done'] = activitiesStr.isEmpty ? [] : activitiesStr.split(',');
-      }
-      map['is_local'] = map['is_local'] == 1;
-      return Visit.fromJson(map);
-    }));
+    return List<Visit>.from(
+      maps.map((map) {
+        if (map['activities_done'] is String) {
+          String activitiesStr = map['activities_done'].toString();
+          map['activities_done'] =
+              activitiesStr.isEmpty ? [] : activitiesStr.split(',');
+        }
+        map['is_local'] = map['is_local'] == 1;
+        return Visit.fromJson(map);
+      }),
+    );
   }
 
   Future<List<Visit>> getUnsyncedVisits() async {
@@ -89,22 +88,25 @@ class DatabaseService {
       whereArgs: [0, 1],
     );
 
-    return List<Visit>.from(maps.map((map) {
-
-      if (map['activities_done'] is String) {
-        String activitiesStr = map['activities_done'].toString();
-        List<String> activitiesList = <String>[];
-        if (activitiesStr.isNotEmpty) {
-          activitiesList.addAll(activitiesStr.split(',').map((e) => e.trim()));
+    return List<Visit>.from(
+      maps.map((map) {
+        if (map['activities_done'] is String) {
+          String activitiesStr = map['activities_done'].toString();
+          List<String> activitiesList = <String>[];
+          if (activitiesStr.isNotEmpty) {
+            activitiesList.addAll(
+              activitiesStr.split(',').map((e) => e.trim()),
+            );
+          }
+          map['activities_done'] = activitiesList;
         }
-        map['activities_done'] = activitiesList;
-      }
 
-      map['is_local'] = map['is_local'] == 1;
+        map['is_local'] = map['is_local'] == 1;
 
-      final visit = Visit.fromJson(map);
-      return visit;
-    }));
+        final visit = Visit.fromJson(map);
+        return visit;
+      }),
+    );
   }
 
   Future<void> markVisitAsSynced(int localId) async {
@@ -121,8 +123,11 @@ class DatabaseService {
     final db = await database;
     final batch = db.batch();
     for (final customer in customers) {
-      batch.insert('customers', customer.toJson(),
-          conflictAlgorithm: ConflictAlgorithm.replace);
+      batch.insert(
+        'customers',
+        customer.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
     }
     await batch.commit();
   }
@@ -138,8 +143,11 @@ class DatabaseService {
     final db = await database;
     final batch = db.batch();
     for (final activity in activities) {
-      batch.insert('activities', activity.toJson(),
-          conflictAlgorithm: ConflictAlgorithm.replace);
+      batch.insert(
+        'activities',
+        activity.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
     }
     await batch.commit();
   }

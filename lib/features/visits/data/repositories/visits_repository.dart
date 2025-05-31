@@ -6,18 +6,18 @@ import '../../../../core/services/connectivity_service.dart';
 import '../../../../core/models/visit.dart';
 import '../../../../core/models/activity.dart';
 
-class VisitsRepository implements IVisitsRepository{
+class VisitsRepository implements IVisitsRepository {
   final ApiService _apiService = Get.find<ApiService>();
   final DatabaseService _databaseService = Get.find<DatabaseService>();
-  final ConnectivityService _connectivityService = Get.find<ConnectivityService>();
+  final ConnectivityService _connectivityService =
+      Get.find<ConnectivityService>();
 
   Future<List<Visit>> getVisits() async {
     if (_connectivityService.isConnected) {
       try {
         try {
           await syncLocalVisits();
-        } catch (syncError) {
-        }
+        } catch (syncError) {}
 
         final apiVisits = await _apiService.getVisits();
         final localVisits = await _databaseService.getLocalVisits();
@@ -79,12 +79,10 @@ class VisitsRepository implements IVisitsRepository{
     for (int i = 0; i < unsyncedVisits.length; i++) {
       final visit = unsyncedVisits[i];
       try {
-
         List<String> newActivities = <String>[];
         for (String activity in visit.activitiesDone) {
           newActivities.add(activity.toString());
         }
-
 
         final visitForApi = Visit(
           customerId: visit.customerId,
@@ -100,7 +98,6 @@ class VisitsRepository implements IVisitsRepository{
         final apiJson = visitForApi.toApiJson();
 
         final syncedVisit = await _apiService.createVisit(visitForApi);
-
 
         if (visit.id != null) {
           await _databaseService.markVisitAsSynced(visit.id!);
@@ -141,7 +138,6 @@ class VisitsRepository implements IVisitsRepository{
     }
   }
 
-
   Future<bool> forceSyncAll() async {
     if (!_connectivityService.isConnected) {
       return false;
@@ -155,14 +151,11 @@ class VisitsRepository implements IVisitsRepository{
     }
   }
 
-
   Future<void> testSyncOnly() async {
     try {
       await syncLocalVisits();
-    } catch (e, stackTrace) {
-    }
+    } catch (e, stackTrace) {}
   }
 }
 
-class IVisitsRepository {
-}
+class IVisitsRepository {}

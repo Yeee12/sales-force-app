@@ -46,12 +46,12 @@ class StatusChart extends GetView<VisitsController> {
   }
 
   Widget _buildStatusBar(
-      BuildContext context,
-      String status,
-      int count,
-      int total,
-      Color color,
-      ) {
+    BuildContext context,
+    String status,
+    int count,
+    int total,
+    Color color,
+  ) {
     final percentage = total > 0 ? (count / total) : 0.0;
 
     return Column(
@@ -62,15 +62,15 @@ class StatusChart extends GetView<VisitsController> {
           children: [
             Text(
               status,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
             ),
             Text(
               '$count (${(percentage * 100).toStringAsFixed(1)}%)',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
             ),
           ],
         ),

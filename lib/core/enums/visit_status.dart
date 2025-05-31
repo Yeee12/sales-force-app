@@ -8,8 +8,8 @@ enum VisitStatus {
 
   static VisitStatus fromString(String value) {
     return VisitStatus.values.firstWhere(
-            (status) => status.value == value,
-        orElse: () => VisitStatus.pending,
+      (status) => status.value == value,
+      orElse: () => VisitStatus.pending,
     );
   }
 }

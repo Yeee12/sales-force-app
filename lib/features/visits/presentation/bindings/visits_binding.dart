@@ -5,5 +5,5 @@ class VisitsBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<VisitsController>(() => VisitsController());
-    }
+  }
 }

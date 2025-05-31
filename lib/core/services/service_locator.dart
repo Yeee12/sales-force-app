@@ -7,6 +7,6 @@ class ServiceLocator {
   static Future<void> init() async {
     Get.put<ApiService>(ApiService(), permanent: true);
     Get.put<DatabaseService>(DatabaseService(), permanent: true);
-    Get.put<ConnectivityService>(ConnectivityService(), permanent:true);
- }
+    Get.put<ConnectivityService>(ConnectivityService(), permanent: true);
+  }
 }

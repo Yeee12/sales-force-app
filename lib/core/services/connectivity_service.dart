@@ -24,10 +24,11 @@ class ConnectivityService extends GetxService {
   }
 
   void _updateConnectionStatus(List<ConnectivityResult> results) {
-    _isConnected.value = results.any((result) => result != ConnectivityResult.none);
+    _isConnected.value = results.any(
+      (result) => result != ConnectivityResult.none,
+    );
     if (_isConnected.value) {
-    } else {
-    }
+    } else {}
   }
 
   Future<bool> checkCurrentConnectivity() async {

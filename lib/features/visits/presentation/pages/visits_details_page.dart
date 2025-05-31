@@ -12,9 +12,7 @@ class VisitDetailsPage extends GetView<VisitsController> {
     final activities = controller.getActivityDescriptions(visit.activitiesDone);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Visit Details'),
-      ),
+      appBar: AppBar(title: const Text('Visit Details')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -80,11 +78,7 @@ class VisitDetailsPage extends GetView<VisitsController> {
                   ),
                   const SizedBox(height: 12),
 
-                  _buildInfoRow(
-                    'Location',
-                    visit.location,
-                    Icons.location_on,
-                  ),
+                  _buildInfoRow('Location', visit.location, Icons.location_on),
 
                   if (visit.isLocal) ...[
                     const SizedBox(height: 12),
@@ -147,7 +141,7 @@ class VisitDetailsPage extends GetView<VisitsController> {
                     ),
                     const SizedBox(height: 8),
                     ...activities.map(
-                          (activity) => Padding(
+                      (activity) => Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4),
                         child: Row(
                           children: [
@@ -176,21 +170,24 @@ class VisitDetailsPage extends GetView<VisitsController> {
     );
   }
 
-  Widget _buildInfoRow(String label, String value, IconData icon, {Color? statusColor}) {
+  Widget _buildInfoRow(
+    String label,
+    String value,
+    IconData icon, {
+    Color? statusColor,
+  }) {
     return Row(
       children: [
         Icon(icon, size: 20, color: Colors.grey[600]),
         const SizedBox(width: 8),
-        Text(
-          '$label: ',
-          style: const TextStyle(fontWeight: FontWeight.w500),
-        ),
+        Text('$label: ', style: const TextStyle(fontWeight: FontWeight.w500)),
         Expanded(
           child: Text(
             value,
             style: TextStyle(
               color: statusColor ?? Colors.black87,
-              fontWeight: statusColor != null ? FontWeight.w500 : FontWeight.normal,
+              fontWeight:
+                  statusColor != null ? FontWeight.w500 : FontWeight.normal,
             ),
           ),
         ),
@@ -200,16 +197,16 @@ class VisitDetailsPage extends GetView<VisitsController> {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
-    case 'completed':
-    return Colors.green;
-    case 'in progress':
-    return Colors.orange;
-    case 'planned':
-    return Colors.blue;
-    case 'cancelled':
-    return Colors.red;
-    default:
-    return Colors.grey;
+      case 'completed':
+        return Colors.green;
+      case 'in progress':
+        return Colors.orange;
+      case 'planned':
+        return Colors.blue;
+      case 'cancelled':
+        return Colors.red;
+      default:
+        return Colors.grey;
     }
-    }
+  }
 }

@@ -25,11 +25,7 @@ class StatisticsCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  icon,
-                  color: color,
-                  size: 24,
-                ),
+                Icon(icon, color: color, size: 24),
                 const Spacer(),
                 Text(
                   value,
