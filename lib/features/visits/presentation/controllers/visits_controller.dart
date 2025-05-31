@@ -8,7 +8,10 @@ import 'package:sales_force_automation/features/visits/data/repositories/visits_
 
 
 class VisitsController extends GetxController {
-  final VisitsRepository _repository = Get.put(VisitsRepository());
+  final VisitsRepository _repository;
+
+  VisitsController({VisitsRepository? repository})
+      : _repository = repository ?? Get.find<VisitsRepository>();
 
   final RxList<Visit> _visits = <Visit>[].obs;
   final RxList<Visit> _filteredVisits = <Visit>[].obs;
