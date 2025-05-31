@@ -159,6 +159,17 @@ class DatabaseService {
     }
     await batch.commit();
   }
+  Future<void> updateVisitId(int oldId, int newId) async {
+    final db = await database; // however you get your DB instance
+
+    // Update the record with oldId to have the newId
+    await db.update(
+      'visits',
+      {'id': newId},
+      where: 'id = ?',
+      whereArgs: [oldId],
+    );
+  }
 
   Future<List<Activity>> getLocalActivities() async {
     final db = await database;

@@ -71,13 +71,14 @@ class VisitsRepository implements IVisitsRepository {
 
   Future<void> syncLocalVisits() async {
     if (!_connectivityService.isConnected) {
-      return;
+      return; // No internet connection, skip sync
     }
 
     final unsyncedVisits = await _databaseService.getUnsyncedVisits();
 
     for (final visit in unsyncedVisits) {
       try {
+        // Prepare a copy of the visit with isLocal=false to send to API
         final visitForApi = Visit(
           customerId: visit.customerId,
           visitDate: visit.visitDate,
@@ -89,23 +90,26 @@ class VisitsRepository implements IVisitsRepository {
           isLocal: false,
         );
 
+        // Send the local visit data to the API to create remotely
         final syncedVisit = await _apiService.createVisit(visitForApi);
 
-        // Optionally update local DB with new remote ID or other fields if returned
-        /*
+        // If the API returns a new ID different from the local ID,
+        // update the local database record with the new remote ID
         if (syncedVisit.id != null && visit.id != syncedVisit.id) {
           await _databaseService.updateVisitId(visit.id!, syncedVisit.id!);
         }
-        */
 
+        // Mark this visit as synced locally (e.g., isLocal = false)
         if (visit.id != null) {
           await _databaseService.markVisitAsSynced(visit.id!);
         }
       } catch (e) {
-        continue; // Ignore sync errors for individual visits
+        // If syncing this visit fails, ignore and continue with others
+        continue;
       }
     }
   }
+
 
   Future<List<Customer>> getCustomers() async {
     if (_connectivityService.isConnected) {

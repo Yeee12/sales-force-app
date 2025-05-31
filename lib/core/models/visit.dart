@@ -31,7 +31,6 @@ class Visit {
             : cleaned.split(',').map((e) => e.trim()).toList();
       }
       if (activities is List) {
-        // Ensure we create a mutable list
         return List<String>.from(activities);
       }
       return <String>[];
@@ -55,11 +54,8 @@ class Visit {
 
   Map<String, dynamic> toApiJson() {
     try {
-      print('Converting to API JSON...');
-      print('Activities list: ${activitiesDone}');
-      print('Activities type: ${activitiesDone.runtimeType}');
 
-      // Create a completely new list to avoid any read-only issues
+
       List<String> safeActivities = <String>[];
       for (var activity in activitiesDone) {
         safeActivities.add(activity.toString());
@@ -71,7 +67,6 @@ class Visit {
       } else {
         activitiesFormatted = '{${safeActivities.join(',')}}';
       }
-      print('Formatted activities: $activitiesFormatted');
 
       final json = <String, dynamic>{
         'customer_id': customerId,
@@ -85,17 +80,13 @@ class Visit {
       if (id != null) json['id'] = id;
       if (createdAt != null) json['created_at'] = createdAt!.toIso8601String();
 
-      print('Final JSON: $json');
       return json;
     } catch (e, stackTrace) {
-      print('Error in toApiJson: $e');
-      print('Stack trace: $stackTrace');
       rethrow;
     }
   }
 
   Map<String, dynamic> toLocalJson() {
-    // Create a mutable copy of the activities list
     final List<String> activitiesCopy = List<String>.from(activitiesDone);
 
     return {

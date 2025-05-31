@@ -25,7 +25,7 @@ void main() {
       when(mockRepo.getVisits()).thenAnswer((_) async => []);
       when(mockRepo.getCustomers()).thenAnswer((_) async => []);
       when(mockRepo.getActivities()).thenAnswer((_) async => []);
-      when(mockRepo.syncLocalVisits()).thenAnswer((_) async => null);
+      when(mockRepo.syncLocalVisits()).thenAnswer((_) async {});
 
       return VisitsController();
     });

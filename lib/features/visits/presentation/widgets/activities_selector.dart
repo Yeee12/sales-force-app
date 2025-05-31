@@ -34,7 +34,7 @@ class ActivitiesSelector extends GetView<VisitsController> {
                 }
               },
             );
-          }).toList(),
+          })
         ],
       );
     });
