@@ -10,7 +10,7 @@ class VisitsRepository implements IVisitsRepository {
   final ApiService _apiService = Get.find<ApiService>();
   final DatabaseService _databaseService = Get.find<DatabaseService>();
   final ConnectivityService _connectivityService =
-      Get.find<ConnectivityService>();
+  Get.find<ConnectivityService>();
 
   Future<List<Visit>> getVisits() async {
     if (_connectivityService.isConnected) {
@@ -76,34 +76,33 @@ class VisitsRepository implements IVisitsRepository {
 
     final unsyncedVisits = await _databaseService.getUnsyncedVisits();
 
-    for (int i = 0; i < unsyncedVisits.length; i++) {
-      final visit = unsyncedVisits[i];
+    for (final visit in unsyncedVisits) {
       try {
-        List<String> newActivities = <String>[];
-        for (String activity in visit.activitiesDone) {
-          newActivities.add(activity.toString());
-        }
-
         final visitForApi = Visit(
           customerId: visit.customerId,
           visitDate: visit.visitDate,
           status: visit.status,
           location: visit.location,
           notes: visit.notes,
-          activitiesDone: newActivities,
+          activitiesDone: List<String>.from(visit.activitiesDone),
           createdAt: visit.createdAt,
           isLocal: false,
         );
 
-        final apiJson = visitForApi.toApiJson();
-
         final syncedVisit = await _apiService.createVisit(visitForApi);
+
+        // Optionally update local DB with new remote ID or other fields if returned
+        /*
+        if (syncedVisit.id != null && visit.id != syncedVisit.id) {
+          await _databaseService.updateVisitId(visit.id!, syncedVisit.id!);
+        }
+        */
 
         if (visit.id != null) {
           await _databaseService.markVisitAsSynced(visit.id!);
         }
-      } catch (e, stackTrace) {
-        continue;
+      } catch (e) {
+        continue; // Ignore sync errors for individual visits
       }
     }
   }
@@ -146,7 +145,7 @@ class VisitsRepository implements IVisitsRepository {
     try {
       await syncLocalVisits();
       return true;
-    } catch (e, stackTrace) {
+    } catch (e) {
       return false;
     }
   }
@@ -154,7 +153,7 @@ class VisitsRepository implements IVisitsRepository {
   Future<void> testSyncOnly() async {
     try {
       await syncLocalVisits();
-    } catch (e, stackTrace) {}
+    } catch (e) {}
   }
 }
 

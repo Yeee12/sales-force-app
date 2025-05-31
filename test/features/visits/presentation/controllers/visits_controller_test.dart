@@ -60,7 +60,7 @@ void main() {
     when(mockRepo.getVisits()).thenAnswer((_) async => visits);
     when(mockRepo.getCustomers()).thenAnswer((_) async => customers);
     when(mockRepo.getActivities()).thenAnswer((_) async => activities);
-    when(mockRepo.syncLocalVisits()).thenAnswer((_) async => null);
+    when(mockRepo.syncLocalVisits()).thenAnswer((_) async {});
 
     await controller.loadData();
 
