@@ -3,20 +3,16 @@ include: package:flutter_lints/flutter.yaml
 linter:
   rules:
     # Disable rules that are too strict for development
-    avoid_print: false  # Allow print statements during development
-    use_key_in_widget_constructors: false  # Allow widgets without key parameter
-    constant_identifier_names: false  # Allow uppercase constants
-    unnecessary_overrides: false  # Allow method overrides for clarity
-    empty_catches: false  # Allow empty catch blocks sometimes
-    unused_local_variable: true  # Keep this for catching actual issues
-    unused_catch_stack: false  # Allow unused stack traces
-    asset_does_not_exist: false  # Don't fail on missing .env during CI
-    strict_top_level_inference: false  # Allow var without explicit type
-    avoid_returning_null_for_void: true  # Keep this as it's a good practice
-    deprecated_member_use: false  # Allow deprecated methods temporarily
-    unnecessary_brace_in_string_interps: true  # Keep this for clean code
-    unnecessary_to_list_in_spreads: true  # Keep this for performance
-    use_super_parameters: false  # Allow regular parameters for now
+    avoid_print: false
+    use_key_in_widget_constructors: false
+    constant_identifier_names: false
+    unnecessary_overrides: false
+    empty_catches: false
+
+    avoid_returning_null_for_void: true
+    unnecessary_brace_in_string_interps: true
+    unnecessary_to_list_in_spreads: true
+    use_super_parameters: false
 
 analyzer:
   exclude:
@@ -24,8 +20,10 @@ analyzer:
     - "**/*.freezed.dart"
     - "build/**"
   errors:
-    # Treat warnings as info to prevent CI failures
+
     unused_local_variable: info
+    unused_catch_stack: info
+    deprecated_member_use: info
     avoid_returning_null_for_void: info
     unnecessary_brace_in_string_interps: info
     unnecessary_to_list_in_spreads: info
