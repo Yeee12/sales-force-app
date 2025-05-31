@@ -17,7 +17,7 @@ jobs:
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.32.1'
+          flutter-version: 'stable' # or '3.19.6' if you want a specific version
           cache: true
 
       - name: Install dependencies
