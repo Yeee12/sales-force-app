@@ -14,6 +14,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Create .env file from secrets
+        run: |
+          echo "SUPABASE_BASE_URL=${{ secrets.SUPABASE_BASE_URL }}" > .env
+          echo "SUPABASE_API_KEY=${{ secrets.SUPABASE_API_KEY }}" >> .env
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:

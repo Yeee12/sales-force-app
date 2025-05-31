@@ -81,9 +81,11 @@ class Visit {
       if (createdAt != null) json['created_at'] = createdAt!.toIso8601String();
 
       return json;
-    } catch (e) {
+    }// ignore: unused_catch_stack
+    catch (e, stackTrace) {
       rethrow;
     }
+
   }
 
   Map<String, dynamic> toLocalJson() {
