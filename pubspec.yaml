@@ -19,7 +19,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.7.2
+  sdk: ^3.6.0
+  flutter: ">=3.24.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -36,14 +37,14 @@ dependencies:
   path: ^1.8.3
   connectivity_plus: ^6.1.4
   shared_preferences: ^2.2.2
-  intl: 0.20.2
+  intl: ^0.20.2
   flutter_form_builder: ^10.0.1
   form_builder_validators: ^11.1.2
   cupertino_icons: ^1.0.8
   mockito: ^5.4.0
   flutter_dotenv: ^5.1.0
   get_test: ^4.0.1
-  uuid: ^3.0.6
+  uuid: ^4.5.1
 
 dev_dependencies:
   flutter_test:
