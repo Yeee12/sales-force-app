@@ -67,15 +67,13 @@ class VisitsController extends GetxController {
     try {
       _isLoading.value = true;
 
-      final results = await Future.wait([
-        _repository.getVisits(),
-        _repository.getCustomers(),
-        _repository.getActivities(),
-      ]);
+      final visits = await _repository.getVisits();
+      final customers = await _repository.getCustomers();
+      final activities = await _repository.getActivities();
 
-      final visits = results[0] as List<Visit>;
-      final customers = results[1] as List<Customer>;
-      final activities = results[2] as List<Activity>;
+      print('visits: $visits');
+      print('customers: $customers');
+      print('activities: $activities');
 
       _visits.assignAll(visits);
       _customers.assignAll(customers);
@@ -83,8 +81,8 @@ class VisitsController extends GetxController {
 
       _filterVisits();
       await _repository.syncLocalVisits();
-    } catch (e) {
-      print('Load data error: $e');
+    } catch (e, stackTrace) {
+      print('Load data error: $e\n$stackTrace');
       Get.snackbar(
         'Error',
         'Failed to load data: $e',
@@ -96,6 +94,7 @@ class VisitsController extends GetxController {
       _isLoading.value = false;
     }
   }
+
 
   Future<void> refreshData() async {
     try {

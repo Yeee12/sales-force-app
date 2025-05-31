@@ -67,18 +67,24 @@ class DatabaseService {
   Future<List<Visit>> getLocalVisits() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('visits');
+
     return List<Visit>.from(
       maps.map((map) {
-        if (map['activities_done'] is String) {
-          String activitiesStr = map['activities_done'].toString();
-          map['activities_done'] =
-              activitiesStr.isEmpty ? [] : activitiesStr.split(',');
+        final mutableMap = Map<String, dynamic>.from(map); // 🔧 make it writable
+
+        if (mutableMap['activities_done'] is String) {
+          String activitiesStr = mutableMap['activities_done'].toString();
+          mutableMap['activities_done'] =
+          activitiesStr.isEmpty ? [] : activitiesStr.split(',');
         }
-        map['is_local'] = map['is_local'] == 1;
-        return Visit.fromJson(map);
+
+        mutableMap['is_local'] = mutableMap['is_local'] == 1;
+
+        return Visit.fromJson(mutableMap);
       }),
     );
   }
+
 
   Future<List<Visit>> getUnsyncedVisits() async {
     final db = await database;
@@ -90,24 +96,26 @@ class DatabaseService {
 
     return List<Visit>.from(
       maps.map((map) {
-        if (map['activities_done'] is String) {
-          String activitiesStr = map['activities_done'].toString();
+        final mutableMap = Map<String, dynamic>.from(map); // 🔧 make it mutable
+
+        if (mutableMap['activities_done'] is String) {
+          String activitiesStr = mutableMap['activities_done'].toString();
           List<String> activitiesList = <String>[];
           if (activitiesStr.isNotEmpty) {
             activitiesList.addAll(
               activitiesStr.split(',').map((e) => e.trim()),
             );
           }
-          map['activities_done'] = activitiesList;
+          mutableMap['activities_done'] = activitiesList;
         }
 
-        map['is_local'] = map['is_local'] == 1;
+        mutableMap['is_local'] = mutableMap['is_local'] == 1;
 
-        final visit = Visit.fromJson(map);
-        return visit;
+        return Visit.fromJson(mutableMap);
       }),
     );
   }
+
 
   Future<void> markVisitAsSynced(int localId) async {
     final db = await database;

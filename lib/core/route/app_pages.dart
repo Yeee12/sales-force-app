@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:sales_force_automation/features/visits/presentation/bindings/visits_binding.dart';
+import 'package:sales_force_automation/features/visits/presentation/controllers/visits_controller.dart';
 import 'package:sales_force_automation/features/visits/presentation/pages/add_visit_page.dart';
 import 'package:sales_force_automation/features/visits/presentation/pages/visit_statistics_page.dart';
 import 'package:sales_force_automation/features/visits/presentation/pages/visits_details_page.dart';
@@ -16,8 +17,11 @@ class AppPages {
     GetPage(
       name: AppRoutes.ADD_VISIT,
       page: () => AddVisitPage(),
-      binding: VisitsBinding(),
+      binding: BindingsBuilder(() {
+        Get.put(VisitsController());
+      }),
     ),
+
     GetPage(
       name: AppRoutes.VISIT_DETAILS,
       page: () => VisitDetailsPage(),
